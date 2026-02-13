@@ -1,0 +1,25 @@
+{
+  "name": "copilot-ralph-tui",
+  "version": "1.0.0",
+  "description": "A TUI for Copilot to vibe code in Ralph mode",
+  "type": "module",
+  "bin": {
+    "copilot-ralph-tui": "./cli.js"
+  },
+  "main": "./cli.js",
+  "scripts": {
+    "start": "node --import tsx cli.js",
+    "dev": "node --import tsx cli.js"
+  },
+  "author": "Ashiq Sultan",
+  "license": "MIT",
+  "dependencies": {
+    "@github/copilot-sdk": "^0.1.22",
+    "ink": "^6.7.0",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^19.2.4",
+    "tsx": "^4.21.0"
+  }
+}
