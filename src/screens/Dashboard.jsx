@@ -4,6 +4,7 @@ import RequirementList from '../components/RequirementList.jsx'
 import RequirementDetail from '../components/RequirementDetail.jsx'
 import ExecutionConsole from '../components/ExecutionConsole.jsx'
 import StatusBar from '../components/StatusBar.jsx'
+import ModelSelector from '../components/ModelSelector.jsx'
 import RequirementForm from './RequirementForm.jsx'
 import Settings from './Settings.jsx'
 import { readPrd, addRequirement, updateRequirement, deleteRequirement } from '../core/prd.js'
@@ -19,7 +20,7 @@ export default function Dashboard({ projectPath }) {
   const [consoleLines, setConsoleLines] = useState([])
   const [status, setStatus] = useState('idle') // idle, running, planning
   const [activeReqId, setActiveReqId] = useState(null)
-  const [view, setView] = useState('dashboard') // dashboard, add, edit, settings, confirm-delete
+  const [view, setView] = useState('dashboard') // dashboard, add, edit, settings, model-selector, confirm-delete
   const [focusPanel, setFocusPanel] = useState('list') // list, right
 
   const runAllAbortedRef = useRef(false)
@@ -266,6 +267,9 @@ export default function Dashboard({ projectPath }) {
         case 's':
           setView('settings')
           break
+        case 'm':
+          setView('model-selector')
+          break
         case 'q':
           exit()
           break
@@ -303,6 +307,22 @@ export default function Dashboard({ projectPath }) {
 
   if (view === 'settings') {
     return <Settings onBack={() => { setView('dashboard'); loadRequirements() }} />
+  }
+
+  if (view === 'model-selector') {
+    return (
+      <ModelSelector
+        onSelect={(selectedModel) => {
+          addConsoleLine(`--- Model set to: ${selectedModel} ---`, 'system')
+          setView('dashboard')
+          setFocusPanel('list')
+        }}
+        onCancel={() => {
+          setView('dashboard')
+          setFocusPanel('list')
+        }}
+      />
+    )
   }
 
   const handleFormCancel = () => {

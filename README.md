@@ -34,16 +34,17 @@ copilot-ralph-tui --path /path/to/your/project
 
 | Key | Action |
 |-----|--------|
-| `r` | Run executor on selected requirement |
+| `r` | Run executor on all requirements |
+| `i` | Run executor on selected requirement |
 | `p` | Run planner on all requirements |
-| `a` | Add new requirement |
+| `n` | Add new requirement |
 | `e` | Edit selected requirement |
 | `d` | Delete selected requirement |
-| `s` | Open settings (copilot path, model) |
+| `s` | Open settings (status check, model) |
+| `m` | Open model selector |
 | `x` | Abort running process |
 | `q` | Quit |
 | `↑/↓` | Navigate requirement list |
-| `Tab` | Switch focus between list and console |
 
 ## How It Works
 
@@ -64,7 +65,7 @@ copilot-ralph-tui/
 │   │   ├── ProjectSelect.jsx # Folder path input
 │   │   ├── Dashboard.jsx     # Main screen
 │   │   ├── RequirementForm.jsx # Add/edit requirements
-│   │   └── Settings.jsx      # Copilot & model config
+│   │   └── Settings.jsx      # Copilot status & model config
 │   ├── components/
 │   │   ├── RequirementList.jsx
 │   │   ├── ExecutionConsole.jsx
@@ -86,7 +87,6 @@ copilot-ralph-tui/
 
 Settings are stored in `~/.copilot-ralph-tui/config.json`:
 
-- **copilotPath** — Custom path to copilot CLI (auto-detected if not set)
 - **model** — Selected AI model for execution
 
 ## License

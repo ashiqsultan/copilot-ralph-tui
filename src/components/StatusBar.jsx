@@ -13,6 +13,7 @@ export default function StatusBar({ status, activeRequirement, model, projectPat
     run: '#ffdf20',      // orange
     edit: '#2563eb',     // blue
     delete: '#fb2c36',   // red
+    model: '#06b6d4',    // cyan
     settings: '#d1d5db', // silver
     abort: '#fb2c36',    // red
     quit: '#fb2c36'      // red
@@ -59,6 +60,7 @@ export default function StatusBar({ status, activeRequirement, model, projectPat
           <Text>{chalk.hex(shortcutColors.run)('[I]run one')}</Text>
           <Text>{chalk.hex(shortcutColors.edit)('[E]dit')}</Text>
           <Text>{chalk.hex(shortcutColors.delete)('[D]elete')}</Text>
+          <Text>{chalk.hex(shortcutColors.model)('[M]odel')}</Text>
           <Text>{chalk.hex(shortcutColors.settings)('[S]ettings')}</Text>
           <Text>{chalk.hex(shortcutColors.abort)('[X]abort')}</Text>
           <Text>{chalk.hex(shortcutColors.quit)('[Q]uit')}</Text>

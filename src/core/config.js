@@ -5,7 +5,6 @@ const CONFIG_DIR = path.join(process.env.HOME || process.env.USERPROFILE, '.copi
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json')
 
 const DEFAULTS = {
-  copilotPath: null,
   model: null
 }
 

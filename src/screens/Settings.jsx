@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Box, Text, useInput } from 'ink'
-import TextInput from 'ink-text-input'
 import Spinner from 'ink-spinner'
 import SelectInput from 'ink-select-input'
 import { getConfigValue, setConfigValue } from '../core/config.js'
@@ -12,7 +11,6 @@ export default function Settings({ onBack }) {
   const [checking, setChecking] = useState(false)
   const [models, setModels] = useState([])
   const [loadingModels, setLoadingModels] = useState(false)
-  const [copilotPathInput, setCopilotPathInput] = useState(getConfigValue('copilotPath') || '')
   const [currentModel, setCurrentModel] = useState(getConfigValue('model') || '')
   const [message, setMessage] = useState(null)
 
@@ -28,9 +26,8 @@ export default function Settings({ onBack }) {
 
   const menuItems = [
     { label: `Check Copilot Status`, value: 'check' },
-    { label: `Set Copilot Path (current: ${getConfigValue('copilotPath') || 'auto-detect'})`, value: 'path' },
     { label: `Select Model (current: ${currentModel || 'none'})`, value: 'model' },
-    { label: 'Back', value: 'back' }
+    { label: '(Back)', value: 'back' }
   ]
 
   const handleMenuSelect = async (item) => {
@@ -41,8 +38,6 @@ export default function Settings({ onBack }) {
       const result = await checkCopilotStatus()
       setCopilotStatus(result)
       setChecking(false)
-    } else if (item.value === 'path') {
-      setView('path')
     } else if (item.value === 'model') {
       setLoadingModels(true)
       setView('model')
@@ -54,17 +49,6 @@ export default function Settings({ onBack }) {
       }
       setLoadingModels(false)
     }
-  }
-
-  const handlePathSubmit = (value) => {
-    const trimmed = value.trim()
-    if (trimmed) {
-      setConfigValue('copilotPath', trimmed)
-    } else {
-      setConfigValue('copilotPath', null)
-    }
-    setMessage({ type: 'success', text: trimmed ? `Path set to: ${trimmed}` : 'Path reset to auto-detect' })
-    setView('menu')
   }
 
   const handleModelSelect = (item) => {
@@ -104,23 +88,6 @@ export default function Settings({ onBack }) {
           <SelectInput items={menuItems} onSelect={handleMenuSelect} />
           <Box marginTop={1}>
             <Text dimColor>Esc to go back</Text>
-          </Box>
-        </Box>
-      )}
-
-      {view === 'path' && (
-        <Box flexDirection="column">
-          <Text>Copilot CLI path (leave empty for auto-detect):</Text>
-          <Box>
-            <Text color="green">❯ </Text>
-            <TextInput
-              value={copilotPathInput}
-              onChange={setCopilotPathInput}
-              onSubmit={handlePathSubmit}
-            />
-          </Box>
-          <Box marginTop={1}>
-            <Text dimColor>Enter to save • Esc to cancel</Text>
           </Box>
         </Box>
       )}
