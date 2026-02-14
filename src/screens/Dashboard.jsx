@@ -309,7 +309,7 @@ export default function Dashboard({ projectPath }) {
         {/* Left panel - Requirements */}
         <Box
           flexDirection="column"
-          width="40%"
+          width="60%"
           borderStyle="single"
           borderColor={focusPanel === 'list' ? 'cyan' : 'gray'}
           paddingX={1}
@@ -325,7 +325,7 @@ export default function Dashboard({ projectPath }) {
         {/* Right panel - Console */}
         <Box
           flexDirection="column"
-          width="60%"
+          width="40%"
           borderStyle="single"
           borderColor={focusPanel === 'console' ? 'cyan' : 'gray'}
           paddingX={1}
