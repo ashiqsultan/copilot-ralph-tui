@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Text, useInput } from "ink";
 import Spinner from "ink-spinner";
+import chalk from "chalk";
 import { useAppStore } from "../appState.js";
+import statusColors from "../helpers/statusColors.js";
 
 // selectedIndex: 0 = Console, 1..N = requirements[index - 1]
 export default function RequirementList({
@@ -11,20 +13,13 @@ export default function RequirementList({
   focused,
 }) {
   const status = useAppStore((s) => s.status);
+  const getStatusColor = (status) => {
+    if (status === "running") return statusColors.running;
+    if (status === "planning") return statusColors.planning;
+    if (status === "idle") return statusColors.idle;
+    return undefined;
+  };
   const totalItems = requirements.length + 1; // +1 for Console
-  const statusColors = {
-    idle: "green",
-    running: "yellow",
-    planning: "blue",
-    error: "red",
-  };
-
-  const statusLabels = {
-    idle: "●",
-    running: "",
-    planning: "◉",
-    error: "✗",
-  };
 
   useInput(
     (input, key) => {
@@ -58,17 +53,12 @@ export default function RequirementList({
         >
           Console
         </Text>
-        <Box marginLeft={1}>
-          {status === "running" ? (
-            <Text color={statusColors.running}>
-              <Spinner type="dots" />
-            </Text>
-          ) : (
-            <Text color={statusColors[status] || "white"}>
-              {statusLabels[status] || status}
-            </Text>
-          )}
-        </Box>
+        {(status === "running" || status === "planning") && (
+          <Text color={getStatusColor(status)}>
+            {" "}
+            <Spinner type="dots2" />
+          </Text>
+        )}
       </Box>
 
       {/* Separator */}

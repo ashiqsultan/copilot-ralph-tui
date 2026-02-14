@@ -13,7 +13,8 @@ export default function ExecutionConsole({ lines, focused }) {
         {focused && <Text color="cyan"> (focused)</Text>}
       </Box>
       {displayLines.length === 0 ? (
-        <Text dimColor>No output yet. Press [r] to run or [p] to plan.</Text>
+        <Text dimColor>No output yet. Press [r] to run or [p] to plan. Use Arrow keys to navigate requirements</Text>
+        
       ) : (
         displayLines.map((line, i) => (
           <Text key={i} color={line.type === 'stderr' ? 'red' : line.type === 'system' ? 'green' : undefined} wrap="truncate">

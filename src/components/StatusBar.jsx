@@ -3,20 +3,20 @@ import { Box, Text } from "ink";
 import Spinner from "ink-spinner";
 import chalk from "chalk";
 import { useAppStore } from "../appState.js";
+import statusColors from "../helpers/statusColors.js";
 
 export default function StatusBar({ activeRequirement, model, projectPath }) {
   const status = useAppStore((s) => s.status);
 
   const shortcutColors = {
-    new: "#2563eb", // blue
-    plan: "#16a34a", // green
-    run: "#ffdf20", // orange
-    edit: "#2563eb", // blue
-    delete: "#fb2c36", // red
-    model: "#06b6d4", // cyan
-    settings: "#d1d5db", // silver
-    abort: "#fb2c36", // red
-    quit: "#fb2c36", // red
+    new: statusColors.idle, // blue
+    plan: statusColors.planning, // green
+    run: statusColors.running, // orange
+    edit: statusColors.idle, // blue
+    delete: "#ff6467", // red
+    abort: "#ff6467", // red
+    model: "#005f78", // cyan
+    settings: "#005f78", // silver
   };
 
   const statusLabels = {
@@ -29,6 +29,7 @@ export default function StatusBar({ activeRequirement, model, projectPath }) {
   const getStatusColor = (status) => {
     if (status === "running") return shortcutColors.run;
     if (status === "planning") return shortcutColors.plan;
+    if (status === "idle") return statusColors.idle;
     return undefined; // default color
   };
 
@@ -47,30 +48,36 @@ export default function StatusBar({ activeRequirement, model, projectPath }) {
           <Text>{chalk.hex(shortcutColors.run)("[I]run one")}</Text>
           <Text>{chalk.hex(shortcutColors.edit)("[E]dit")}</Text>
           <Text>{chalk.hex(shortcutColors.delete)("[D]elete")}</Text>
+          <Text>{chalk.hex(shortcutColors.abort)("[X]abort")}</Text>
           <Text>{chalk.hex(shortcutColors.model)("[M]odel")}</Text>
           <Text>{chalk.hex(shortcutColors.settings)("[S]ettings")}</Text>
-          <Text>{chalk.hex(shortcutColors.abort)("[X]abort")}</Text>
-          <Text>{chalk.hex(shortcutColors.quit)("[Q]uit")}</Text>
+          <Text dimColor>{"[Q]uit"}</Text>
         </Box>
-
 
         <Box gap={2}>
           {/* Status Indicator */}
-          {(status === "running" || status === "planning") ? (
+          {status === "running" || status === "planning" ? (
             <Box gap={1}>
               <Text color={getStatusColor(status)}>
-                <Spinner type="dots12" />
+                <Spinner type="dots2" />
               </Text>
-              <Text>{chalk.hex(getStatusColor(status))(statusLabels[status] || status)}</Text>
+              {/* <Text>{chalk.hex(getStatusColor(status))(statusLabels[status] || status)}</Text> */}
+              <Text>{status}</Text>
             </Box>
           ) : (
-            <Text>{chalk.hex(getStatusColor(status))(statusLabels[status] || status)}</Text>
+            <Text>
+              {chalk.hex(getStatusColor(status))(
+                statusLabels[status] || status,
+              )}
+            </Text>
           )}
           {activeRequirement != null && (
             <Text dimColor>#{String(activeRequirement)}</Text>
           )}
           {/* Model indicator */}
-          {model && <Text>{chalk.hex(shortcutColors.model)(`[${model}]`)}</Text>}
+          {model && (
+            <Text>{chalk.hex(shortcutColors.model)(`[${model}]`)}</Text>
+          )}
         </Box>
       </Box>
     </Box>
