@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Box, Text, useInput, useApp } from 'ink'
 import RequirementList from '../components/RequirementList.jsx'
+import RequirementDetail from '../components/RequirementDetail.jsx'
 import ExecutionConsole from '../components/ExecutionConsole.jsx'
 import StatusBar from '../components/StatusBar.jsx'
 import RequirementForm from './RequirementForm.jsx'
@@ -10,15 +11,16 @@ import { executeRequirement, abortCurrentProcess, isProcessRunning } from '../co
 import { executePlan, abortPlanProcess, isPlanRunning } from '../core/planner.js'
 import { getConfigValue } from '../core/config.js'
 
+// selectedIndex: 0 = Console, 1..N = requirements[index - 1]
 export default function Dashboard({ projectPath }) {
   const { exit } = useApp()
   const [requirements, setRequirements] = useState([])
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0) // 0 = Console
   const [consoleLines, setConsoleLines] = useState([])
   const [status, setStatus] = useState('idle') // idle, running, planning
   const [activeReqId, setActiveReqId] = useState(null)
   const [view, setView] = useState('dashboard') // dashboard, add, edit, settings, confirm-delete
-  const [focusPanel, setFocusPanel] = useState('list') // list, console
+  const [focusPanel, setFocusPanel] = useState('list') // list, right
 
   const runAllAbortedRef = useRef(false)
   const model = getConfigValue('model')
@@ -37,6 +39,12 @@ export default function Dashboard({ projectPath }) {
     setConsoleLines((prev) => [...prev, ...lines.map((l) => ({ text: l, type }))])
   }, [])
 
+  // Get the currently selected requirement (null if Console is selected)
+  const getSelectedReq = useCallback(() => {
+    if (selectedIndex === 0) return null
+    return requirements[selectedIndex - 1] || null
+  }, [selectedIndex, requirements])
+
   const handleRun = useCallback(async () => {
     if (isProcessRunning() || isPlanRunning()) return
     if (requirements.length === 0) {
@@ -44,7 +52,7 @@ export default function Dashboard({ projectPath }) {
       return
     }
 
-    const selectedReq = requirements[selectedIndex]
+    const selectedReq = getSelectedReq()
     if (!selectedReq) return
     if (selectedReq.isDone) {
       addConsoleLine(`Requirement #${selectedReq.id} is already done.`, 'system')
@@ -84,7 +92,7 @@ export default function Dashboard({ projectPath }) {
       setStatus('idle')
       setActiveReqId(null)
     }
-  }, [requirements, selectedIndex, projectPath, addConsoleLine, loadRequirements])
+  }, [requirements, getSelectedReq, projectPath, addConsoleLine, loadRequirements])
 
   const runSingleRequirement = useCallback((req, folderPath) => {
     return new Promise(async (resolve) => {
@@ -202,25 +210,25 @@ export default function Dashboard({ projectPath }) {
 
   const handleEdit = useCallback(
     async ({ title, description }) => {
-      const req = requirements[selectedIndex]
+      const req = getSelectedReq()
       if (!req) return
       await updateRequirement(projectPath, req.id, { title, description })
       await loadRequirements()
       setView('dashboard')
     },
-    [projectPath, requirements, selectedIndex, loadRequirements]
+    [projectPath, getSelectedReq, loadRequirements]
   )
 
   const handleDelete = useCallback(async () => {
-    const req = requirements[selectedIndex]
+    const req = getSelectedReq()
     if (!req) return
     await deleteRequirement(projectPath, req.id)
     await loadRequirements()
-    if (selectedIndex >= requirements.length - 1 && selectedIndex > 0) {
+    if (selectedIndex >= requirements.length && selectedIndex > 1) {
       setSelectedIndex(selectedIndex - 1)
     }
     setView('dashboard')
-  }, [projectPath, requirements, selectedIndex, loadRequirements])
+  }, [projectPath, getSelectedReq, selectedIndex, requirements, loadRequirements])
 
   useInput(
     (input, key) => {
@@ -231,7 +239,9 @@ export default function Dashboard({ projectPath }) {
       }
 
       if (key.tab) {
-        setFocusPanel((prev) => (prev === 'list' ? 'console' : 'list'))
+        if (view === 'dashboard') {
+          setFocusPanel((prev) => (prev === 'list' ? 'right' : 'list'))
+        }
         return
       }
 
@@ -247,12 +257,16 @@ export default function Dashboard({ projectPath }) {
           break
         case 'a':
           setView('add')
+          setFocusPanel('right')
           break
         case 'e':
-          if (requirements[selectedIndex]) setView('edit')
+          if (getSelectedReq()) {
+            setView('edit')
+            setFocusPanel('right')
+          }
           break
         case 'd':
-          if (requirements[selectedIndex]) setView('confirm-delete')
+          if (getSelectedReq()) setView('confirm-delete')
           break
         case 's':
           setView('settings')
@@ -263,6 +277,20 @@ export default function Dashboard({ projectPath }) {
       }
     },
     { isActive: view === 'dashboard' }
+  )
+
+  // Tab handler for switching focus during form views
+  useInput(
+    (input, key) => {
+      if (key.tab) {
+        setFocusPanel((prev) => (prev === 'list' ? 'right' : 'list'))
+      }
+      if (key.escape) {
+        setView('dashboard')
+        setFocusPanel('list')
+      }
+    },
+    { isActive: (view === 'add' || view === 'edit') && focusPanel !== 'right' }
   )
 
   // Confirm delete handler
@@ -282,18 +310,39 @@ export default function Dashboard({ projectPath }) {
     return <Settings onBack={() => { setView('dashboard'); loadRequirements() }} />
   }
 
-  if (view === 'add') {
-    return <RequirementForm onSubmit={handleAdd} onCancel={() => setView('dashboard')} />
+  const handleFormCancel = () => {
+    setView('dashboard')
+    setFocusPanel('list')
   }
 
-  if (view === 'edit') {
-    return (
-      <RequirementForm
-        initial={requirements[selectedIndex]}
-        onSubmit={handleEdit}
-        onCancel={() => setView('dashboard')}
-      />
-    )
+  const handleFormAdd = async (data) => {
+    await handleAdd(data)
+    setFocusPanel('list')
+  }
+
+  const handleFormEdit = async (data) => {
+    await handleEdit(data)
+    setFocusPanel('list')
+  }
+
+  // Determine right panel content
+  const renderRightPanel = () => {
+    if (view === 'add') {
+      return <RequirementForm onSubmit={handleFormAdd} onCancel={handleFormCancel} />
+    }
+    if (view === 'edit') {
+      return (
+        <RequirementForm
+          initial={getSelectedReq()}
+          onSubmit={handleFormEdit}
+          onCancel={handleFormCancel}
+        />
+      )
+    }
+    if (selectedIndex === 0) {
+      return <ExecutionConsole lines={consoleLines} focused={focusPanel === 'right'} />
+    }
+    return <RequirementDetail requirement={getSelectedReq()} />
   }
 
   return (
@@ -306,10 +355,10 @@ export default function Dashboard({ projectPath }) {
 
       {/* Main content */}
       <Box flexGrow={1} flexDirection="row">
-        {/* Left panel - Requirements */}
+        {/* Left panel - Navigation */}
         <Box
           flexDirection="column"
-          width="60%"
+          width="40%"
           borderStyle="single"
           borderColor={focusPanel === 'list' ? 'cyan' : 'gray'}
           paddingX={1}
@@ -318,27 +367,27 @@ export default function Dashboard({ projectPath }) {
             requirements={requirements}
             selectedIndex={selectedIndex}
             onSelect={setSelectedIndex}
-            focused={focusPanel === 'list' && view === 'dashboard'}
+            focused={focusPanel === 'list' && (view === 'dashboard' || view === 'confirm-delete')}
           />
         </Box>
 
-        {/* Right panel - Console */}
+        {/* Right panel - Dynamic content */}
         <Box
           flexDirection="column"
-          width="40%"
+          width="60%"
           borderStyle="single"
-          borderColor={focusPanel === 'console' ? 'cyan' : 'gray'}
+          borderColor={focusPanel === 'right' ? 'cyan' : 'gray'}
           paddingX={1}
         >
-          <ExecutionConsole lines={consoleLines} focused={focusPanel === 'console'} />
+          {renderRightPanel()}
         </Box>
       </Box>
 
       {/* Confirm delete */}
-      {view === 'confirm-delete' && requirements[selectedIndex] && (
+      {view === 'confirm-delete' && getSelectedReq() && (
         <Box paddingX={1}>
           <Text color="red">
-            Delete "{requirements[selectedIndex].title}"? (y/n)
+            Delete "{getSelectedReq().title}"? (y/n)
           </Text>
         </Box>
       )}

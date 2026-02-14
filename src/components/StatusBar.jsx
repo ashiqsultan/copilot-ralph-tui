@@ -41,6 +41,7 @@ export default function StatusBar({ status, activeRequirement, model, projectPat
     >
       <Box justifyContent="space-between">
         <Box gap={2}>
+          <Text dimColor>[tab]focus</Text>
           <Text dimColor>[r]un</Text>
           <Text dimColor>[y]run all</Text>
           <Text dimColor>[p]lan</Text>
