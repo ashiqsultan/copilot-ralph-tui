@@ -11,6 +11,7 @@ import { readPrd, addRequirement, updateRequirement, deleteRequirement } from '.
 import { executeRequirement, abortCurrentProcess, isProcessRunning } from '../core/executor.js'
 import { executePlan, abortPlanProcess, isPlanRunning } from '../core/planner.js'
 import { getConfigValue } from '../core/config.js'
+import { useAppStore } from '../appState.js'
 
 // selectedIndex: 0 = Console, 1..N = requirements[index - 1]
 export default function Dashboard({ projectPath }) {
@@ -18,7 +19,8 @@ export default function Dashboard({ projectPath }) {
   const [requirements, setRequirements] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(0) // 0 = Console
   const [consoleLines, setConsoleLines] = useState([])
-  const [status, setStatus] = useState('idle') // idle, running, planning
+  const status = useAppStore((s) => s.status)
+  const setStatus = useAppStore((s) => s.setStatus)
   const [activeReqId, setActiveReqId] = useState(null)
   const [view, setView] = useState('dashboard') // dashboard, add, edit, settings, model-selector, confirm-delete
   const [focusPanel, setFocusPanel] = useState('list') // list, right
@@ -383,7 +385,6 @@ export default function Dashboard({ projectPath }) {
             selectedIndex={selectedIndex}
             onSelect={setSelectedIndex}
             focused={focusPanel === 'list' && (view === 'dashboard' || view === 'confirm-delete')}
-            status={status}
           />
         </Box>
 
@@ -410,7 +411,6 @@ export default function Dashboard({ projectPath }) {
 
       {/* Status bar */}
       <StatusBar
-        status={status}
         activeRequirement={activeReqId}
         model={model}
         projectPath={projectPath}

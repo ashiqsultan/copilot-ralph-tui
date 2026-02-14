@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Box, Text } from 'ink'
 import Spinner from 'ink-spinner'
 import chalk from 'chalk'
+import { useAppStore } from '../appState.js'
 
-export default function StatusBar({ status, activeRequirement, model, projectPath }) {
+export default function StatusBar({ activeRequirement, model, projectPath }) {
+  const status = useAppStore((s) => s.status)
   const [spinnerColor, setSpinnerColor] = useState('yellow')
   const colors = ['yellow', 'cyan', 'magenta', 'green', 'blue', 'red']
   

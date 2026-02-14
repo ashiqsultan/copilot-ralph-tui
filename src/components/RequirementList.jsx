@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text, useInput } from "ink";
 import Spinner from "ink-spinner";
+import { useAppStore } from "../appState.js";
 
 // selectedIndex: 0 = Console, 1..N = requirements[index - 1]
 export default function RequirementList({
@@ -8,8 +9,8 @@ export default function RequirementList({
   selectedIndex,
   onSelect,
   focused,
-  status,
 }) {
+  const status = useAppStore((s) => s.status);
   const totalItems = requirements.length + 1; // +1 for Console
   const statusColors = {
     idle: "green",
