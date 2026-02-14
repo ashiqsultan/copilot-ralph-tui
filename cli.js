@@ -14,5 +14,6 @@ for (let i = 0; i < args.length; i++) {
 }
 
 render(React.createElement(App, { initialPath: projectPath }), {
-  exitOnCtrlC: true
+  exitOnCtrlC: true,
+  patchConsole: false
 })
