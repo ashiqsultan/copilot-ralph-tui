@@ -1,29 +1,44 @@
-import React from 'react'
-import { Box, Text, useInput } from 'ink'
+import React from "react";
+import { Box, Text, useInput } from "ink";
+import Spinner from "ink-spinner";
 
 // selectedIndex: 0 = Console, 1..N = requirements[index - 1]
 export default function RequirementList({
   requirements,
   selectedIndex,
   onSelect,
-  focused
+  focused,
+  status,
 }) {
-  const totalItems = requirements.length + 1 // +1 for Console
+  const totalItems = requirements.length + 1; // +1 for Console
+  const statusColors = {
+    idle: "green",
+    running: "yellow",
+    planning: "blue",
+    error: "red",
+  };
+
+  const statusLabels = {
+    idle: "●",
+    running: "",
+    planning: "◉",
+    error: "✗",
+  };
 
   useInput(
     (input, key) => {
-      if (!focused) return
+      if (!focused) return;
       if (key.upArrow && selectedIndex > 0) {
-        onSelect(selectedIndex - 1)
+        onSelect(selectedIndex - 1);
       }
       if (key.downArrow && selectedIndex < totalItems - 1) {
-        onSelect(selectedIndex + 1)
+        onSelect(selectedIndex + 1);
       }
     },
-    { isActive: focused }
-  )
+    { isActive: focused },
+  );
 
-  const isConsoleSelected = selectedIndex === 0
+  const isConsoleSelected = selectedIndex === 0;
 
   return (
     <Box flexDirection="column">
@@ -33,16 +48,26 @@ export default function RequirementList({
 
       {/* Fixed Console item */}
       <Box>
-        <Text color={isConsoleSelected && focused ? 'cyan' : undefined}>
-          {isConsoleSelected ? '▸ ' : '  '}
+        <Text color={isConsoleSelected && focused ? "cyan" : undefined}>
+          {isConsoleSelected ? "▸ " : "  "}
         </Text>
-        <Text color="magenta">▣ </Text>
         <Text
-          color={isConsoleSelected && focused ? 'cyan' : undefined}
+          color={isConsoleSelected && focused ? "cyan" : undefined}
           bold={isConsoleSelected && focused}
         >
           Console
         </Text>
+        <Box marginLeft={1}>
+          {status === "running" ? (
+            <Text color={statusColors.running}>
+              <Spinner type="dots" />
+            </Text>
+          ) : (
+            <Text color={statusColors[status] || "white"}>
+              {statusLabels[status] || status}
+            </Text>
+          )}
+        </Box>
       </Box>
 
       {/* Separator */}
@@ -59,27 +84,27 @@ export default function RequirementList({
       )}
 
       {requirements.map((req, index) => {
-        const listIndex = index + 1
-        const isSelected = listIndex === selectedIndex
-        const statusIcon = req.isDone ? '✓' : '○'
-        const statusColor = req.isDone ? 'green' : 'yellow'
+        const listIndex = index + 1;
+        const isSelected = listIndex === selectedIndex;
+        const statusIcon = req.isDone ? "✓" : "○";
+        const statusColor = req.isDone ? "green" : "yellow";
 
         return (
           <Box key={req.id}>
-            <Text color={isSelected && focused ? 'cyan' : undefined}>
-              {isSelected ? '▸ ' : '  '}
+            <Text color={isSelected && focused ? "cyan" : undefined}>
+              {isSelected ? "▸ " : "  "}
             </Text>
             <Text color={statusColor}>{statusIcon} </Text>
             <Text
-              color={isSelected && focused ? 'cyan' : undefined}
+              color={isSelected && focused ? "cyan" : undefined}
               bold={isSelected && focused}
               strikethrough={req.isDone}
             >
               {req.id}. {req.title}
             </Text>
           </Box>
-        )
+        );
       })}
     </Box>
-  )
+  );
 }

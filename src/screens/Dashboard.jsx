@@ -363,6 +363,7 @@ export default function Dashboard({ projectPath }) {
             selectedIndex={selectedIndex}
             onSelect={setSelectedIndex}
             focused={focusPanel === 'list' && (view === 'dashboard' || view === 'confirm-delete')}
+            status={status}
           />
         </Box>
 
