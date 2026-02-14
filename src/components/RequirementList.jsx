@@ -54,7 +54,7 @@ export default function RequirementList({
 
       {requirements.length === 0 && (
         <Box marginTop={1}>
-          <Text dimColor>No requirements yet. Press [a] to add one.</Text>
+          <Text dimColor>No requirements yet. Press [n] to add new task.</Text>
         </Box>
       )}
 

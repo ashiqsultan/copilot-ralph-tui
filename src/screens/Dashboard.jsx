@@ -241,16 +241,16 @@ export default function Dashboard({ projectPath }) {
 
 
       switch (input) {
-        case 'r':
+        case 'i':
           handleRun()
           break
-        case 'y':
+        case 'r':
           handleRunAll()
           break
         case 'p':
           handlePlan()
           break
-        case 'a':
+        case 'n':
           setView('add')
           setFocusPanel('right')
           break

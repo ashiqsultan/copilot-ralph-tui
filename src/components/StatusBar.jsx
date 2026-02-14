@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Text } from 'ink'
 import Spinner from 'ink-spinner'
+import chalk from 'chalk'
 
 export default function StatusBar({ status, activeRequirement, model, projectPath }) {
   const [spinnerColor, setSpinnerColor] = useState('yellow')
   const colors = ['yellow', 'cyan', 'magenta', 'green', 'blue', 'red']
+  
+  const shortcutColors = {
+    new: '#2563eb',      // blue
+    plan: '#16a34a',     // green
+    run: '#ffdf20',      // orange
+    edit: '#2563eb',     // blue
+    delete: '#fb2c36',   // red
+    settings: '#d1d5db', // silver
+    abort: '#fb2c36',    // red
+    quit: '#fb2c36'      // red
+  }
   
   useEffect(() => {
     if (status !== 'running') return
@@ -41,15 +53,15 @@ export default function StatusBar({ status, activeRequirement, model, projectPat
     >
       <Box justifyContent="space-between">
         <Box gap={2}>
-          <Text dimColor>[r]un</Text>
-          <Text dimColor>[y]run all</Text>
-          <Text dimColor>[p]lan</Text>
-          <Text dimColor>[a]dd</Text>
-          <Text dimColor>[e]dit</Text>
-          <Text dimColor>[d]elete</Text>
-          <Text dimColor>[s]ettings</Text>
-          <Text dimColor>[x]abort</Text>
-          <Text dimColor>[q]uit</Text>
+          <Text>{chalk.hex(shortcutColors.new)('[N]ew')}</Text>
+          <Text>{chalk.hex(shortcutColors.plan)('[P]lan')}</Text>
+          <Text>{chalk.hex(shortcutColors.run)('[R]un all')}</Text>
+          <Text>{chalk.hex(shortcutColors.run)('[I]run one')}</Text>
+          <Text>{chalk.hex(shortcutColors.edit)('[E]dit')}</Text>
+          <Text>{chalk.hex(shortcutColors.delete)('[D]elete')}</Text>
+          <Text>{chalk.hex(shortcutColors.settings)('[S]ettings')}</Text>
+          <Text>{chalk.hex(shortcutColors.abort)('[X]abort')}</Text>
+          <Text>{chalk.hex(shortcutColors.quit)('[Q]uit')}</Text>
         </Box>
         <Box gap={2}>
           {status === 'running' ? (
