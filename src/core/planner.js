@@ -1,8 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import { spawn } from 'node:child_process'
-import { getCopilotPath } from './copilot.js'
-import { getShellPath } from '../helpers/getShellPath.js'
 import { getConfigValue } from './config.js'
 import { readPrd, writePrd } from './prd.js'
 import buildPlanPrompt from '../prompts/buildPlanPrompt.js'
@@ -69,8 +67,6 @@ export async function executePlan(folderPath, callbacks = {}) {
   }
 
   const prompt = buildPlanPrompt(prdRawContent)
-  const copilotPath = getCopilotPath()
-  const shellPath = getShellPath()
   const selectedModel = getConfigValue('model')
 
   if (!selectedModel) {
@@ -79,10 +75,10 @@ export async function executePlan(folderPath, callbacks = {}) {
 
   const args = ['--yolo', '--no-auto-update', '--model', selectedModel]
 
-  const child = spawn(copilotPath, args, {
+  const child = spawn('copilot', args, {
     shell: true,
     cwd: folderPath,
-    env: { ...process.env, PATH: shellPath }
+    env: process.env
   })
 
   child.stdin.write(prompt)

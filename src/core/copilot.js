@@ -1,18 +1,9 @@
 import { CopilotClient } from '@github/copilot-sdk'
-import { findCopilotPath } from '../helpers/findCopilotPath.js'
-import { getConfigValue } from './config.js'
 
 let client = null
-let cachedCopilotPath = null
 
 export function getCopilotPath() {
-  // Check config first, then auto-detect
-  const storedPath = getConfigValue('copilotPath')
-  if (storedPath) return storedPath
-  if (!cachedCopilotPath) {
-    cachedCopilotPath = findCopilotPath()
-  }
-  return cachedCopilotPath
+  return 'copilot'
 }
 
 export async function getCopilotClient(cliPath) {

@@ -1,6 +1,4 @@
 import { spawn } from 'node:child_process'
-import { getCopilotPath } from './copilot.js'
-import { getShellPath } from '../helpers/getShellPath.js'
 import { getConfigValue } from './config.js'
 import { getRequirementById, getNextIncomplete, markDone } from './prd.js'
 import {
@@ -57,8 +55,6 @@ export async function executeRequirement(requirementId, folderPath, callbacks = 
     progressTxt
   )
 
-  const copilotPath = getCopilotPath()
-  const shellPath = getShellPath()
   const selectedModel = getConfigValue('model')
 
   if (!selectedModel) {
@@ -67,10 +63,10 @@ export async function executeRequirement(requirementId, folderPath, callbacks = 
 
   const args = ['--yolo', '--no-auto-update', '--model', selectedModel]
 
-  const child = spawn(copilotPath, args, {
+  const child = spawn('copilot', args, {
     shell: true,
     cwd: folderPath,
-    env: { ...process.env, PATH: shellPath }
+    env: process.env
   })
 
   child.stdin.write(prompt)
