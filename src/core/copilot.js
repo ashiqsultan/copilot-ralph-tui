@@ -19,7 +19,7 @@ export async function getCopilotClient(cliPath) {
 export async function checkCopilotStatus() {
   try {
     const cliPath = getCopilotPath()
-    if (!cliPath || cliPath === 'copilot') {
+    if (!cliPath) {
       return {
         success: false,
         message: 'GitHub Copilot CLI not found. Please ensure it is installed and available in your PATH.'
@@ -43,7 +43,7 @@ export async function checkCopilotStatus() {
 export async function getAvailableModels() {
   try {
     const cliPath = getCopilotPath()
-    if (!cliPath || cliPath === 'copilot') {
+    if (!cliPath) {
       return { success: false, message: 'GitHub Copilot CLI not found.' }
     }
     const copilotClient = await getCopilotClient(cliPath)
