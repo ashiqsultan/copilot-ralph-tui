@@ -1,9 +1,15 @@
 import { CopilotClient } from '@github/copilot-sdk'
+import { execSync } from 'child_process'
 
 let client = null
 
 export function getCopilotPath() {
-  return 'copilot'
+  try {
+    execSync('copilot --version', { stdio: 'pipe' })
+    return 'copilot'
+  } catch (error) {
+    throw new Error('GitHub Copilot CLI is not found in your system or cannot resolve copilot path. Please ensure it is installed and available in your PATH.')
+  }
 }
 
 export async function getCopilotClient(cliPath) {
