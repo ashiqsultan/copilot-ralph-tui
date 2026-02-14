@@ -238,12 +238,7 @@ export default function Dashboard({ projectPath }) {
         return
       }
 
-      if (key.tab) {
-        if (view === 'dashboard') {
-          setFocusPanel((prev) => (prev === 'list' ? 'right' : 'list'))
-        }
-        return
-      }
+
 
       switch (input) {
         case 'r':
