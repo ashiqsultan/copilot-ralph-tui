@@ -6,7 +6,7 @@ import { readFileSync } from 'fs'
 import App from './src/app.jsx'
 
 const args = process.argv.slice(2)
-let projectPath = null
+let projectPath = process.cwd()
 
 for (let i = 0; i < args.length; i++) {
   if ((args[i] === '--path' || args[i] === '-p') && args[i + 1]) {
