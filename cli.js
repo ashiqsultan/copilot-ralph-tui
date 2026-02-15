@@ -1,4 +1,4 @@
-#!/usr/bin/env node --import tsx
+#!/usr/bin/env -S npx tsx
 import React from 'react'
 import { render } from 'ink'
 import { resolve } from 'path'
