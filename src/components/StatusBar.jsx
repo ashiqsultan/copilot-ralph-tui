@@ -51,7 +51,6 @@ export default function StatusBar({ activeRequirement, model, projectPath }) {
           <Text>{chalk.hex(shortcutColors.abort)("[X]abort")}</Text>
           <Text>{chalk.hex(shortcutColors.model)("[M]odel")}</Text>
           <Text>{chalk.hex(shortcutColors.settings)("[S]ettings")}</Text>
-          <Text dimColor>{"[Q]uit"}</Text>
         </Box>
 
         <Box gap={2}>

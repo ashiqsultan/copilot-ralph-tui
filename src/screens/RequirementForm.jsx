@@ -74,7 +74,12 @@ export default function RequirementForm({ initial, onSubmit, onCancel }) {
         <Text bold color={activeField === 'title' ? 'cyan' : undefined}>
           Title:
         </Text>
-        <Box>
+        <Box 
+          borderStyle="round" 
+          borderColor={activeField === 'title' ? 'white' : 'black'}
+          paddingLeft={1}
+          paddingRight={1}
+        >
           <Text color={activeField === 'title' ? 'green' : 'gray'}>
             {activeField === 'title' ? '❯ ' : '  '}
           </Text>
@@ -88,7 +93,13 @@ export default function RequirementForm({ initial, onSubmit, onCancel }) {
         <Text bold color={activeField === 'description' ? 'cyan' : undefined}>
           Description:
         </Text>
-        <Box flexDirection="column">
+        <Box 
+          flexDirection="column" 
+          borderStyle="round" 
+          borderColor={activeField === 'description' ? 'white' : 'black'}
+          paddingLeft={1}
+          paddingRight={1}
+        >
           {descriptionLines.map((line, i) => (
             <Box key={i}>
               <Text color={activeField === 'description' ? 'green' : 'gray'}>

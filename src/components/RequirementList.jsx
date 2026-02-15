@@ -39,7 +39,7 @@ export default function RequirementList({
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold>Navigation</Text>
+        <Text bold>Navigation ↑/↓</Text>
       </Box>
 
       {/* Fixed Console item */}

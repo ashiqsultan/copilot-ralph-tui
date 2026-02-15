@@ -13,7 +13,7 @@ export default function ExecutionConsole({ lines, focused }) {
         {focused && <Text color="cyan"> (focused)</Text>}
       </Box>
       {displayLines.length === 0 ? (
-        <Text dimColor>No output yet. Press [r] to run or [p] to plan. Use Arrow keys to navigate requirements</Text>
+        <Text dimColor>No output yet. Press [r] to run or [p] to plan. Use ↑/↓ to navigate between requirement items and console</Text>
         
       ) : (
         displayLines.map((line, i) => (
