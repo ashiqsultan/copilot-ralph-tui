@@ -1,5 +1,5 @@
 {
-  "name": "copilot-ralph-tui",
+  "name": "copilot-ralph",
   "version": "1.0.0",
   "description": "A TUI for Copilot to vibe code in Ralph mode",
   "type": "module",
