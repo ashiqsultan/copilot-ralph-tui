@@ -4,15 +4,31 @@
   "description": "A TUI for Copilot to vibe code in Ralph mode",
   "type": "module",
   "bin": {
-    "copilot-ralph-tui": "./cli.js"
+    "copilot-ralph": "./cli.js"
   },
   "main": "./cli.js",
+  "files": [
+    "cli.js",
+    "src/",
+    "README.md"
+  ],
   "scripts": {
     "start": "node --import tsx cli.js",
     "dev": "node --import tsx cli.js"
   },
+  "keywords": [
+    "copilot",
+    "tui",
+    "cli",
+    "ralph",
+    "ink",
+    "react"
+  ],
   "author": "Ashiq Sultan",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@github/copilot-sdk": "^0.1.22",
     "chalk": "^5.6.2",
@@ -23,5 +39,9 @@
     "react": "^19.2.4",
     "tsx": "^4.21.0",
     "zustand": "^5.0.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashiqsultan/copilot-ralph-tui"
   }
 }
