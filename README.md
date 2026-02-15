@@ -2,14 +2,33 @@
 
 A TUI (Terminal User Interface) for vibe coding with GitHub Copilot CLI. Manage PRD requirements, generate plans, and execute them autonomously — all from your terminal.
 
-This is a lightweight alternative to the [copilot-ralph](https://github.com/AshiqSultan/copilot-ralph) Electron desktop app.
-
 ## Prerequisites
 
 - **Node.js** v18+
 - **GitHub Copilot CLI** installed and authenticated (`copilot` command available in PATH)
 
-## Install & Run
+## How to use
+
+**1. Install globally using**
+
+```bash
+npm i -g copilot-ralph
+```
+
+**2. cd to any folder and run**
+
+```bash
+copilot-ralph
+```
+
+to open that folder in ralph mode 
+
+**3. Optional you can also use path flag**
+```bash
+copilot-ralph --path /User/xxx/project_folder
+```
+
+## Local Install & Run
 
 ```bash
 # Clone and install
@@ -23,28 +42,21 @@ npm start -- --path /path/to/your/project
 npm start
 ```
 
-### Global Install
-
-```bash
-npm install -g .
-copilot-ralph-tui --path /path/to/your/project
-```
-
 ## Keybindings
 
-| Key | Action |
-|-----|--------|
-| `r` | Run executor on all requirements |
-| `i` | Run executor on selected requirement |
-| `p` | Run planner on all requirements |
-| `n` | Add new requirement |
-| `e` | Edit selected requirement |
-| `d` | Delete selected requirement |
-| `s` | Open settings (status check, model) |
-| `m` | Open model selector |
-| `x` | Abort running process |
-| `q` | Quit |
-| `↑/↓` | Navigate requirement list |
+| Key   | Action                               |
+| ----- | ------------------------------------ |
+| `r`   | Run executor on all requirements     |
+| `i`   | Run executor on selected requirement |
+| `p`   | Run planner on all requirements      |
+| `n`   | Add new requirement                  |
+| `e`   | Edit selected requirement            |
+| `d`   | Delete selected requirement          |
+| `s`   | Open settings (status check, model)  |
+| `m`   | Open model selector                  |
+| `x`   | Abort running process                |
+| `q`   | Quit                                 |
+| `↑/↓` | Navigate requirement list            |
 
 ## How It Works
 
@@ -54,41 +66,12 @@ copilot-ralph-tui --path /path/to/your/project
 4. **Execute** — Copilot CLI autonomously implements each requirement
 5. **Auto-commit** — each completed requirement is committed to git
 
-## Project Structure
-
-```
-copilot-ralph-tui/
-├── cli.js                    # Entry point
-├── src/
-│   ├── app.jsx               # Root component
-│   ├── screens/
-│   │   ├── ProjectSelect.jsx # Folder path input
-│   │   ├── Dashboard.jsx     # Main screen
-│   │   ├── RequirementForm.jsx # Add/edit requirements
-│   │   └── Settings.jsx      # Copilot status & model config
-│   ├── components/
-│   │   ├── RequirementList.jsx
-│   │   ├── ExecutionConsole.jsx
-│   │   ├── StatusBar.jsx
-│   │   └── ModelSelector.jsx
-│   ├── core/                 # Business logic (no UI deps)
-│   │   ├── prd.js            # CRUD for prd.json
-│   │   ├── executor.js       # Copilot CLI execution
-│   │   ├── planner.js        # Plan generation
-│   │   ├── git.js            # Auto-commit
-│   │   ├── progress.js       # Progress tracking
-│   │   ├── config.js         # Settings persistence
-│   │   └── copilot.js        # Copilot SDK client
-│   ├── prompts/              # LLM prompt templates
-│   └── helpers/              # Path resolution utilities
-```
-
 ## Configuration
 
 Settings are stored in `~/.copilot-ralph-tui/config.json`:
 
-- **model** — Selected AI model for execution
-
 ## License
 
 MIT
+
+This is a lightweight alternative to the [copilot ralph desktop app](https://github.com/AshiqSultan/copilot-ralph)
